@@ -258,5 +258,5 @@ Confirm conversion? [y/n]""")
         # add new tracks
         add_tracks(youtube, playlist_id, to_add, log_file)
     except googleapiclient.errors.HttpError as e:
-        print(e.message)
+        print(e)
         update_client_status(available_client)
