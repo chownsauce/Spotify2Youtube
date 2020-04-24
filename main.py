@@ -44,7 +44,7 @@ import logging
 logging.getLogger('googleapicliet.discovery_cache').setLevel(logging.ERROR)
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:37i9dQZF1E3977L4vRd22H"    # playlist to be converted
+spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
@@ -282,9 +282,10 @@ Confirm conversion? [y/n]""")
 
     except Exception as e:
         if not(str(e).startswith('<HttpError 403 when requesting ')&\
-           str(e).endswith(' returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">')):
-            print(f'{type(e).__name__}')
-            print(e)
+           (str(e).endswith(' returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">')|
+            str(e).endswith(' returned "Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT). You may monitor your quota usage and adjust limits in the API Console: https://console.developers.google.com/apis/api/youtube.googleapis.com/quotas?project=437223242971">'))):
+            print(f'ERROR  :    {type(e).__name__}')
+            print(f'MESSAGE:    {e}')
         else:
             update_client_status(available_client)
             print("\n==================================\n")
