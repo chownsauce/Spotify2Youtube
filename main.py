@@ -23,7 +23,7 @@ import logging
 logging.getLogger('googleapicliet.discovery_cache').setLevel(logging.ERROR)
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
+spotify_playlist_uri = "spotify:playlist:37i9dQZF1E3977L4vRd22H"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
@@ -251,12 +251,20 @@ Confirm conversion? [y/n]""")
         to_del = old[~old['Spotify Id'].isin(new['Spotify Id'])]
         print(f"{len(to_del)} new tracks to delete.")
         print(f"{len(to_add)} new tracks to add.")
+        print("==================================\n")
 
         # remove deleted tracks
         remove_tracks(youtube, to_del, old, log_file)
 
         # add new tracks
         add_tracks(youtube, playlist_id, to_add, log_file)
-    except googleapiclient.errors.HttpError as e:
-        print(e)
-        update_client_status(available_client)
+
+    except Exception as e:
+        if not(str(e).startswith('<HttpError 403 when requesting ')&\
+           str(e).endswith(' returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">')):
+            print(f'{type(e).__name__}')
+            print(e)
+        else:
+            update_client_status(available_client)
+            print("\n==================================\n")
+            print(f"Quota for Client {available_client} is used up.")
