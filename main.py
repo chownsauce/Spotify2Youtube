@@ -257,6 +257,10 @@ Confirm conversion? [y/n]""")
 
         # add new tracks
         add_tracks(youtube, playlist_id, to_add, log_file)
-    except googleapiclient.errors.HttpError as e:
-        print(e)
-        update_client_status(available_client)
+
+    except Exception as e:
+        if str(e) != '<HttpError 403 when requesting https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=ILLENIUM+-+Crashing+%28feat.+Bahari%29&alt=json returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">':
+            raise
+        else:
+            update_client_status(available_client)
+            print("Quota for this client is used up.")
