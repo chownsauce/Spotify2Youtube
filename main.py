@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 - Obtain Youtube Data API Credentials
     - Create new project at: https://console.developers.google.com/apis/dashboard
@@ -14,6 +15,17 @@
     - Create new project at: https://developer.spotify.com/dashboard/
     - Add "http://localhost:8080" to "Redirect URIs"
     - Save spotify_client_id and spotify_client_secret to client_secrets/spotify_secret.py
+
+- Directory structure
+    Spotify2Youtube/
+    ├── main.py
+    ├── history/
+    │   └──spotify_username-spotify_playlist-youtube_username.csv
+    └── client_secrets/
+        ├── CLIENT_SECRET0.json
+        ├── CLIENT_SECRET1.json
+        ├── client_status.txt
+        └── spotify_secret.py
 """
 
 import pandas as pd
