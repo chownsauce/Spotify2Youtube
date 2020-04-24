@@ -9,6 +9,7 @@
 
 import pandas as pd
 import datetime
+import logging
 
 import spotipy
 from client_secrets.spotify_secret import spotify_client_id, spotify_client_secret
@@ -17,10 +18,6 @@ import os
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
-
-import logging
-
-logging.getLogger('googleapicliet.discovery_cache').setLevel(logging.ERROR)
 
 # spotify settings
 spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
@@ -231,6 +228,8 @@ Confirm conversion? [y/n]""")
             break
 
     available_client = get_available_client()
+    logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+    logging.getLogger('googleapiclient.http').setLevel(logging.ERROR)
     try:
         # Youtube login
         youtube = youtube_authentication(available_client)
