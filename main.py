@@ -31,6 +31,7 @@
 import pandas as pd
 import datetime
 import logging
+from pprint import pprint
 
 import spotipy
 from client_secrets.spotify_secret import spotify_client_id, spotify_client_secret
@@ -41,7 +42,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
+spotify_playlist_uri = "spotify:playlist:6YYTtoMKjQMO7THwtRu3Oz"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
@@ -52,8 +53,8 @@ def get_tracks():
         client_secret=spotify_client_secret,
         redirect_uri='http://localhost:8080',
         scope=scope,
-        cache_path=".cache",
         show_dialog=False
+        cache_path=".cache.json",
     )
     token_info = sp_oauth.get_cached_token()
     if not token_info:
@@ -71,16 +72,16 @@ def get_tracks():
         playlist_name = (sp.playlist(playlist_uri)['name'])
         playlist_owner_name = sp.playlist(playlist_uri)['owner']['display_name']
         results = sp.playlist_tracks(playlist_uri)
-
         def append_track_details(song_titles, song_uri, artists, time_added, playlist_track):
-            date, time = playlist_track['added_at'].split("T")
-            date = ''.join(date.split("-"))
-            time = ''.join(time[:-1].split(":"))
-            time_added.append(date + time)
-            track = playlist_track["track"]
-            song_uri.append(track['uri'])
-            artists.append(track['artists'][0]['name'])
-            song_titles.append(track['name'])
+            if playlist_track["track"] is not None:
+                date, time = playlist_track['added_at'].split("T")
+                date = ''.join(date.split("-"))
+                time = ''.join(time[:-1].split(":"))
+                time_added.append(date + time)
+                track = playlist_track["track"]
+                song_uri.append(track['uri'])
+                artists.append(track['artists'][0]['name'])
+                song_titles.append(track['name'])
 
         for playlist_track in results["items"]:
             append_track_details(song_titles, song_uri, artists, time_added, playlist_track)
@@ -182,15 +183,33 @@ def get_playlist_id(youtube, spotify_username, spotify_playlist):
         playlist_id, username = create_playlist(youtube, title)
     return playlist_id, username
 
+def get_max_viewcount_index(video_ids):
+    request = youtube.videos().list(
+        part="statistics",
+        id = ",".join(video_ids)
+    )
+    response = request.execute()
+    results = response["items"]
+    view_counts = [int(result["statistics"]["viewCount"]) for result in results]
+    return view_counts.index(max(view_counts))
+
 def search(youtube, search_str):
     request = youtube.search().list(
         part="snippet",
-        maxResults=25,
-        q=search_str
+        maxResults=5,
+        q=search_str,
+        type="video"
     )
     response = request.execute()
-    first_result = response["items"][0]
-    video_id = first_result["id"]["videoId"]
+
+    results = response["items"]
+    video_ids = []
+    for result in results:
+        video_ids.append(result["id"]["videoId"])
+    max_viewcount_index = get_max_viewcount_index(video_ids)
+    selected_result = results[max_viewcount_index]
+
+    video_id = selected_result["id"]["videoId"]
     return video_id
 
 def add_track(youtube, playlist_id, video_id):

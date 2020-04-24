@@ -132,3 +132,4 @@ dmypy.json
 history/
 client_secrets/
 test.py
+.cache.json
