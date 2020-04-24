@@ -53,8 +53,8 @@ def get_tracks():
         client_secret=spotify_client_secret,
         redirect_uri='http://localhost:8080',
         scope=scope,
-        show_dialog=False
-        cache_path=".cache.json",
+        show_dialog=False,
+        cache_path=".cache.json"
     )
     token_info = sp_oauth.get_cached_token()
     if not token_info:
