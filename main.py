@@ -5,6 +5,15 @@
     - Create OAuth consent screen
     - Create OAuth client ID
     - Download JSON for the client ID
+    - Save JSON in client_serets/CLIENT_SECRET{number}
+    - Create client_serets/client_status.txt to store expiration time of credentials:
+        e.g. 2020-04-24 13:19:31
+
+
+- Obtain Spotify API Credentials
+    - Create new project at: https://developer.spotify.com/dashboard/
+    - Add "http://localhost:8080" to "Redirect URIs"
+    - Save spotify_client_id and spotify_client_secret to client_secrets/spotify_secret.py
 """
 
 import pandas as pd
