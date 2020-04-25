@@ -42,7 +42,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:6YYTtoMKjQMO7THwtRu3Oz"    # playlist to be converted
+spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
@@ -190,7 +190,14 @@ def get_max_viewcount_index(video_ids):
     )
     response = request.execute()
     results = response["items"]
-    view_counts = [int(result["statistics"]["viewCount"]) for result in results]
+    view_counts = []
+    for index, result in enumerate(results):
+        try:
+            view_counts.append(int(result["statistics"]["viewCount"]))
+        except:
+            print(f"https://www.youtube.com/watch?v={video_ids[index]}")
+            pprint(result["statistics"])
+            quit()
     return view_counts.index(max(view_counts))
 
 def search(youtube, search_str):
@@ -288,7 +295,7 @@ Confirm conversion? [y/n]""")
         # compare with spotify tracks
         to_add = new[~new['Spotify Id'].isin(old['Spotify Id'])]
         to_del = old[~old['Spotify Id'].isin(new['Spotify Id'])]
-        print(f"{len(to_del)} new tracks to delete.")
+        print(f"{len(to_del)} old tracks to delete.")
         print(f"{len(to_add)} new tracks to add.")
         print("==================================\n")
 
@@ -301,7 +308,7 @@ Confirm conversion? [y/n]""")
     except Exception as e:
         if not(str(e).startswith('<HttpError 403 when requesting ')&\
            (str(e).endswith(' returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">')|
-            str(e).endswith(' returned "Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT). You may monitor your quota usage and adjust limits in the API Console: https://console.developers.google.com/apis/api/youtube.googleapis.com/quotas?project=437223242971">'))):
+            (' returned "Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT). You may monitor your quota usage and adjust limits in the API Console: ' in str(e)))):
             print(f'ERROR  :    {type(e).__name__}')
             print(f'MESSAGE:    {e}')
         else:
