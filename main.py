@@ -312,8 +312,7 @@ Confirm conversion? [y/n]""")
         if not(str(e).startswith('<HttpError 403 when requesting ')&\
            (str(e).endswith(' returned "The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.">')|
             (' returned "Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT). You may monitor your quota usage and adjust limits in the API Console: ' in str(e)))):
-            print(f'ERROR  :    {type(e).__name__}')
-            print(f'MESSAGE:    {e}')
+            raise
         else:
             update_client_status(available_client)
             print("\n==================================\n")
