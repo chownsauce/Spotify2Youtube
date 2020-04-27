@@ -42,7 +42,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:1l7uy7VYia0ANsIiT53jE7"    # playlist to be converted
+spotify_playlist_uri = "spotify:playlist:37i9dQZEVXbMDoHDwVN2tF"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
@@ -114,7 +114,10 @@ def update_client_status(current_client):
     for i, line in enumerate(client_status.read().splitlines()):
         if i == current_client:
             now = datetime.datetime.now()
-            new_status.append(now.strftime("%Y-%m-%d %H:%M:%S"))
+            if now.hour < 15:
+                # subtract 1 day
+                now = now - datetime.timedelta(days = 1)
+            new_status.append(now.strftime("%Y-%m-%d 15:00:00"))
         else:
             new_status.append(line)
     client_status.close()
