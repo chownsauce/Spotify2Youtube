@@ -165,7 +165,6 @@ def create_playlist(youtube, title):
     username = created_playlist["snippet"]["channelTitle"]
     return playlist_id, username
 
-
 def get_playlist_id(youtube, spotify_username, spotify_playlist):
     title = f"{spotify_playlist} - by {spotify_username}"
     request = youtube.playlists().list(

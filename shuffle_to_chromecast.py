@@ -32,10 +32,12 @@ def get_video_ids(youtube):
     random.shuffle(video_ids)
     return video_ids[:min(MAX_NUM_OF_VIDEOS,len(video_ids))]
 
-def setup_chromecast(video_ids):
+def find_chromecast():
     chromecasts = pychromecast.get_chromecasts()
     cast = next(cc for cc in chromecasts if cc.device.friendly_name == CAST_NAME)
+    return cast
 
+def setup_chromecast(cast, video_ids):
     cast.wait()
     print(cast.device)
     print(cast.status)
@@ -57,9 +59,10 @@ if __name__ == "__main__":
     logging.getLogger('googleapiclient.http').setLevel(logging.ERROR)
 
     try:
+        cast = find_chromecast()
         youtube  = youtube_authentication(available_client)
         video_ids = get_video_ids(youtube)
-        setup_chromecast(video_ids)
+        setup_chromecast(cast, video_ids)
 
     except Exception as e:
         if not (str(e).startswith('<HttpError 403 when requesting ') & \
