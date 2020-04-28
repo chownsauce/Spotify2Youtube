@@ -1,15 +1,12 @@
-import argparse
 import logging
-import sys
 import random
-import datetime
 from main import get_available_client, update_client_status, youtube_authentication
 
 import pychromecast
 from pychromecast.controllers.youtube import YouTubeController
 
 CAST_NAME = "Living Room TV"
-PLAYLIST_ID = "PLV6jqh0YN16WilsuMThWe_Nw6evO6ArEP"
+PLAYLIST_ID = "PLM7k3j7Jzfe_yYIywL0khAV0ZTTedvuLh"
 MAX_NUM_OF_VIDEOS = 50
 
 def get_video_ids(youtube):
