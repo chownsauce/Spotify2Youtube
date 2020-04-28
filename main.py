@@ -42,11 +42,11 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 # spotify settings
-spotify_playlist_uri = "spotify:playlist:37i9dQZEVXbMDoHDwVN2tF"    # playlist to be converted
+SPOTIFY_PLAYLIST_URL = "spotify:playlist:37i9dQZEVXbMDoHDwVN2tF"    # playlist to be converted
 
 def get_tracks():
     scope = 'user-library-read'
-    playlist_uri = spotify_playlist_uri
+    playlist_uri = SPOTIFY_PLAYLIST_URL
 
     sp_oauth = spotipy.SpotifyOAuth(
         client_id=spotify_client_id,
