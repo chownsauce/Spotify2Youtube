@@ -5,7 +5,7 @@ from main import get_available_client, update_client_status, youtube_authenticat
 import pychromecast
 from pychromecast.controllers.youtube import YouTubeController
 
-CAST_NAME = "Living Room TV"
+CAST_IP = '192.168.1.194'
 PLAYLIST_ID = "PLM7k3j7Jzfe_yYIywL0khAV0ZTTedvuLh"
 MAX_NUM_OF_VIDEOS = 50
 
@@ -29,11 +29,6 @@ def get_video_ids(youtube):
     random.shuffle(video_ids)
     return video_ids[:min(MAX_NUM_OF_VIDEOS,len(video_ids))]
 
-def find_chromecast():
-    chromecasts = pychromecast.get_chromecasts()
-    cast = next(cc for cc in chromecasts if cc.device.friendly_name == CAST_NAME)
-    return cast
-
 def setup_chromecast(cast, video_ids):
     cast.wait()
     print(cast.device)
@@ -56,7 +51,8 @@ if __name__ == "__main__":
     logging.getLogger('googleapiclient.http').setLevel(logging.ERROR)
 
     try:
-        cast = find_chromecast()
+        # cast = find_chromecast()
+        cast = pychromecast.Chromecast(CAST_IP)
         youtube  = youtube_authentication(available_client)
         video_ids = get_video_ids(youtube)
         setup_chromecast(cast, video_ids)
