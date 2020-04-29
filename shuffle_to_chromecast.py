@@ -3,10 +3,10 @@ import random
 from main import get_available_client, update_client_status, youtube_authentication
 
 import pychromecast
-from pychromecast.controllers.youtube import YouTubeController
+from new_YoutubeController import YouTubeController
 
 CAST_IP = '192.168.1.194'
-PLAYLIST_ID = "PLM7k3j7Jzfe_yYIywL0khAV0ZTTedvuLh"
+PLAYLIST_ID = "PLV6jqh0YN16WilsuMThWe_Nw6evO6ArEP"
 MAX_NUM_OF_VIDEOS = 50
 
 def get_video_ids(youtube):
@@ -37,7 +37,13 @@ def setup_chromecast(cast, video_ids):
 
     yt = YouTubeController()
     cast.register_handler(yt)
-    yt.play_video(video_ids[0])
+    yt.init_session()
+    mc = cast.media_controller
+    if mc.status.player_is_playing or mc.status.player_is_paused:
+        yt.add_to_queue(video_ids[0])
+    else:
+        yt.play_video(video_ids[0])
+
     i = 1
     print(f"{i} song added.")
     for video_id in video_ids[1:]:
